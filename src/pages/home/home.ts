@@ -28,7 +28,6 @@ export class HomePage {
       }).present()
 
     this.profileData = this.afdata.object(`profile/${data.uid}`)
-    console.log(this.profileData)
 
     } else {
       this.toast.create({

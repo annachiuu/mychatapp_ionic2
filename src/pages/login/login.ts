@@ -7,9 +7,6 @@ import { TabsPage } from '../tabs/tabs';
 import { ProfilePage } from '../profile/profile';
 import { SignupPage } from '../signup/signup';
 
-// import { AngularFireAuth } from 'angularfire2/auth';
-// import { AuthProviders, AuthMethods, AngularFire } from 'angularfire2'
-
 
 @IonicPage()
 @Component({

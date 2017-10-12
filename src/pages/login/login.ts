@@ -3,8 +3,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { User } from '../../models/user';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { HomePage } from '../home/home';
-import { TabsPage } from '../tabs/tabs';
+// import { TabsPage } from '../tabs/tabs';
+import { ProfilePage } from '../profile/profile';
 import { SignupPage } from '../signup/signup';
+
 // import { AngularFireAuth } from 'angularfire2/auth';
 // import { AuthProviders, AuthMethods, AngularFire } from 'angularfire2'
 /**
@@ -33,7 +35,7 @@ export class LoginPage {
       const result = this.afauth.auth.signInWithEmailAndPassword(user.email, user.password);
       console.log(result);
       if (result) {
-        this.navCtrl.setRoot(TabsPage);
+        this.navCtrl.setRoot(ProfilePage); //change back to TabsPage
       }
     }
     catch(e) {

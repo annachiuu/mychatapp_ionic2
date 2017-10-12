@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Profiles } from '../../models/profiles';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { TabsPage } from '../tabs/tabs';
 
 @IonicPage()
 @Component({
@@ -10,8 +13,10 @@ import { Profiles } from '../../models/profiles';
 export class ProfilePage {
 
   profile = {} as Profiles;
+  uid = "SSyLZi4CHxbVNIeNHwrJEbCSPIH3"
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
+    public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
@@ -19,7 +24,13 @@ export class ProfilePage {
   }
 
   saveProfile(profile: profile) {
-    
+    //capture the auth state
+    this.afauth.authState.take(1).subscribe(auth => {
+      this.afdata.object("profile/" + auth.uid ).set(this.profile)
+        .then(() => this.navCtrl.setRoot(TabsPage));
+    })
+
+
   }
 
 }

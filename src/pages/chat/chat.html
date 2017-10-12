@@ -34,5 +34,6 @@
 </ion-content>
 
 <ion-footer>
-<ion-textarea placeholder="Text Input"></ion-textarea>
+<ion-textarea placeholder="Text Input" [(ngModel)]="message.text"></ion-textarea>
+<button ion-button color="light" full (click)="send()">Send</button>
 </ion-footer>

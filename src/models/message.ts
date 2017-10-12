@@ -1,6 +1,6 @@
-export interface Message {
+export class Message {
   uid: string;
   fid: string;
-  time: string;
+  time: Date = new Date();
   text: string;
 }

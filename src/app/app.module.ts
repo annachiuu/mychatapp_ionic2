@@ -4,11 +4,14 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireDatabaseModule} from 'angularfire2/database';
 
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { ContactPage } from '../pages/contact/contact';
 import { ChatPage } from '../pages/chat/chat';
+import { ProfilePage } from '../pages/profile/profile';
+
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -37,13 +40,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ContactPage,
     ChatPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(config),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AngularFireDatabaseModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -53,7 +58,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ContactPage,
     ChatPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    ProfilePage
   ],
   providers: [
     StatusBar,

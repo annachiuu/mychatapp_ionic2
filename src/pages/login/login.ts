@@ -4,7 +4,7 @@ import { User } from '../../models/user';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { HomePage } from '../home/home';
 import { TabsPage } from '../tabs/tabs';
-
+import { SignupPage } from '../signup/signup';
 // import { AngularFireAuth } from 'angularfire2/auth';
 // import { AuthProviders, AuthMethods, AngularFire } from 'angularfire2'
 /**

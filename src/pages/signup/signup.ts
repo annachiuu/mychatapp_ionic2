@@ -25,7 +25,7 @@ export class SignupPage {
     try {
       const result = await this.afauth.auth.createUserWithEmailAndPassword(this.user.email, this.user.password);
       console.log(result);
-      this.navCtrl.push(HomePage);
+      this.navCtrl.setRoot(HomePage);
     }
     catch(e) {
       console.error(e);

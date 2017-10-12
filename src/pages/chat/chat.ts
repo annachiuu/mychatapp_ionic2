@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Message } from '../../models/message';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
+import 'rxjs/add/operator/filter';
 
 /**
  * Generated class for the ChatPage page.
@@ -20,14 +21,19 @@ export class ChatPage {
 
   message = {} as Message;
   messageListRef$: FirebaseListObservable<message[]>;
+  recievedListRef$: FirebaseListObservable<message[]>;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
-        this.messageListRef$ = this.afdata.list(`messages`);
 
-        this.messageListRef$.subscribe(data => {
+        this.messageListRef$ = this.afdata.list(`messages`, {
+          query: {
+            orderByChild: 'uid',
+            equalTo: this.afauth.auth.currentUser.uid
+          }
+        });
 
-        })
+
   }
 
   ionViewDidLoad() {

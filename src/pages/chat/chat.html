@@ -16,18 +16,18 @@
 <ion-content padding>
 
 <!-- User chat box -->
-  <ion-card color="primary">
-    <ion-card-content>
-      Congratulations on the baby Mark!
+  <ion-card color="light" align="right" *ngFor="let message of messageListRef$ | async">
+    <ion-card-content >
+      {{message.text}}
     </ion-card-content>
   </ion-card>
 
 <!-- Friend chat box -->
-  <ion-card color="secondary">
+  <!-- <ion-card color="secondary">
     <ion-card-content>
       Thank you!
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
 
 
 

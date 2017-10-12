@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Message } from '../../models/message';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database-deprecated';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 
 /**
  * Generated class for the ChatPage page.
@@ -19,11 +19,15 @@ import { AngularFireDatabase } from 'angularfire2/database-deprecated';
 export class ChatPage {
 
   message = {} as Message;
+  messageListRef$: FirebaseListObservable<message[]>;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
+        this.messageListRef$ = this.afdata.list(`messages`);
 
+        this.messageListRef$.subscribe(data => {
 
+        })
   }
 
   ionViewDidLoad() {

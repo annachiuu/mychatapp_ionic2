@@ -27,7 +27,6 @@ export class HomePage {
         duration: 2000
       }).present()
 
-
     this.profileData = this.afdata.object(`profile/${data.uid}`)
     console.log(this.profileData)
 

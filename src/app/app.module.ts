@@ -2,6 +2,8 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
@@ -13,6 +15,19 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+
+
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAQScVmyUu2mQzp-JP2BQUfnsVhxnw1ZeE",
+    authDomain: "mychatapp-ab684.firebaseapp.com",
+    databaseURL: "https://mychatapp-ab684.firebaseio.com",
+    projectId: "mychatapp-ab684",
+    storageBucket: "mychatapp-ab684.appspot.com",
+    messagingSenderId: "382680600775"
+  };
+  // firebase.initializeApp(config);
+
 
 @NgModule({
   declarations: [
@@ -26,7 +41,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(config),
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

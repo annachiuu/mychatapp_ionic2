@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { User } from '../../models/user';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { HomePage } from '../home/home';
+import { SignupPage } from '../signup/signup';
 
 // import { AngularFireAuth } from 'angularfire2/auth';
 // import { AuthProviders, AuthMethods, AngularFire } from 'angularfire2'
@@ -12,7 +14,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
  * Ionic pages and navigation.
  */
 
-// @IonicPage()
+@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
@@ -31,7 +33,7 @@ export class LoginPage {
       const result = this.afauth.auth.signInWithEmailAndPassword(user.email, user.password);
       console.log(result);
       if (result) {
-        this.navCtrl.push('HomePage');
+        this.navCtrl.push(HomePage);
       }
     }
     catch(e) {
@@ -40,7 +42,7 @@ export class LoginPage {
   }
 
   signup() {
-    this.navCtrl.push('SignupPage');
+    this.navCtrl.push(SignupPage);
   }
 
 }

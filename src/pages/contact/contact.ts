@@ -22,19 +22,6 @@ export class ContactPage {
     public alertCtrl: AlertController,
     public navCtrl: NavController) {
 
-      // //Retrieve list of friend's UID from firebase
-      // let uid = this.afauth.auth.currentUser.uid
-      // this.afdata.list(`profile/${uid}/myFriends/`).subscribe(data => {
-      //   console.log(data, 'run till here')
-      //   data.forEach( friend => {
-      //     console.log(friend.$key)
-      //     //Use each UID to display profile
-      //     this.addProfile(friend.$key)
-      //   })
-
-      // })
-
-      
       let uid = this.afauth.auth.currentUser.uid      
       this.userFriends = this.afdata.list(`profile/${uid}/myFriends`)
       .map((friends) => {

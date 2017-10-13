@@ -16,9 +16,9 @@
 <ion-content padding>
 
 <!-- User chat box -->
-  <ion-card color="light" align="right" *ngFor="let message of messageListRef$ | async">
-    <ion-card-content >
-      {{message.text}}
+  <ion-card color="light" align="right" *ngFor="let message of messageList | async">
+    <ion-card-content>
+      {{(message.data | async)?.text}}
     </ion-card-content>
   </ion-card>
 

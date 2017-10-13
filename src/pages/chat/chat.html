@@ -9,6 +9,9 @@
 
 
 <ion-content padding>
+    <ion-fab top right edge>
+        <button ion-fab color='danger'><ion-icon name="microphone"></ion-icon></button>
+      </ion-fab>
 
 <!-- User chat box -->
   <ion-card color="light" align="left" *ngFor="let message of messageList | async" >

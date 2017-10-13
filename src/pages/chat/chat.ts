@@ -26,7 +26,8 @@ export class ChatPage {
   messageList: Observable<any>;
   
   currentFriend: FirebaseObjectObservable<Profiles>;
-  
+  currentFID: string;
+
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
        
@@ -46,18 +47,16 @@ export class ChatPage {
     console.log('ionViewDidLoad ChatPage');
     let friend = this.navParams.get('friend')
 
-    this.afdata.object(`profile/${friend.$key}`).subscribe(data => {
-      console.log(data)
-    })
-
+    this.currentFID = friend.$key;
     this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
 
   }
 
   send() {
+    if (this.message.text) {
     //add to messages branch in fb
     this.message.uid = this.afauth.auth.currentUser.uid
-    this.message.fid = "SSyLZi4CHxbVNIeNHwrJEbCSPIH3" //change it later
+    this.message.fid = this.currentFID //change it later
 
     this.afauth.authState.take(1).subscribe(auth => {
         this.afdata.list(`messages`).push(this.message)
@@ -66,7 +65,7 @@ export class ChatPage {
           this.afdata.object(`profile/${this.message.uid}/myMessages/${item.key}`).set("1")
         });
     })
-
+  }
 
   }
 

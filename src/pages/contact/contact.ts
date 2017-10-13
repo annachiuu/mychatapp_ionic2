@@ -11,13 +11,23 @@ import { AngularFireAuth } from 'angularfire2/auth';
 })
 export class ContactPage {
 
-  friendsListRef$: FirebaseObjectObservable<string[]>;
-  newFriendKey: string;
-  profileData : FirebaseObjectObservable<Profiles>;
+  friendsListRef$: FirebaseListObservable<string[]>;
+  
   
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public alertCtrl: AlertController,
     public navCtrl: NavController) {
+
+      //Retrieve list of friend's UID from firebase
+      let uid = this.afauth.auth.currentUser.uid
+      this.afdata.list(`profile/${uid}/myFriends/`).subscribe(data => {
+        console.log(data, 'run till here')
+        data.forEach( friend => {
+          console.log(friend.$key)
+          //Use each UID to display profile
+        })
+
+      })
 
   }
   
@@ -70,5 +80,7 @@ addToFriendList(key: string) {
   let uid = this.afauth.auth.currentUser.uid
   this.afdata.object(`profile/${uid}/myFriends/${key}`).set(1)
 }
+
+
 
 }

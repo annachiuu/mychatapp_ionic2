@@ -16,18 +16,12 @@
 <ion-content padding>
 
 <!-- User chat box -->
-  <ion-card color="light" align="right" *ngFor="let message of messageList | async">
+  <ion-card color="light" align="left" *ngFor="let message of messageList | async" >
+    <ion-card-header class='name'>{{(message.data | async)?.owner}}</ion-card-header>
     <ion-card-content>
       {{(message.data | async)?.text}}
     </ion-card-content>
   </ion-card>
-
-<!-- Friend message chat box
-<ion-card color="secondary" align="left" *ngFor="let f_message of friendMessageList | async">
-    <ion-card-content>
-      {{(f_message.data | async)?.text}}
-    </ion-card-content>
-  </ion-card> -->
 
 </ion-content>
 

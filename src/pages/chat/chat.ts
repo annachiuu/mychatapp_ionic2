@@ -22,6 +22,7 @@ export class ChatPage {
   currentFID: string;
 
   friendMessageList: Observable<any>;
+  currentUserName: string;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
@@ -39,44 +40,37 @@ export class ChatPage {
     })
   }
 
-  // retrieveFriendMessages() {
-  //   let uid = this.afauth.auth.currentUser.uid
-  //   this.friendMessageList = this.afdata.list(`profile/${this.currentFID}/myMessages/${uid}`)
-  //   .map((messages) => {
-  //     return messages.map(message => {
-  //       message.data = this.afdata.object(`messages/${message.$key}`)
-  //         return message
-  //      })
-  //   })
-
-  //   console.log(this.friendMessageList)
-  // }
-
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatPage');
     let friend = this.navParams.get('friend')
+    let uid = this.afauth.auth.currentUser.uid
 
+    this.afdata.object(`profile/${uid}`).subscribe(data => {
+      this.currentUserName = data.firstName + " " + data.lastName;
+    })
     this.currentFID = friend.$key;    
     this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
 
     this.retrieveUserMessages()
   
+
   }
 
   send() {
     if (this.message.text) {
-    //add to messages branch in fb
+
+    //fill in message details
     this.message.uid = this.afauth.auth.currentUser.uid
     this.message.fid = this.currentFID //change it later
     this.message.time = new Date()
+    this.message.owner = this.currentUserName
+
+  //add to messages branch in fb
     this.afauth.authState.take(1).subscribe(auth => {
         this.afdata.list(`messages`).push(this.message)
         .then((item) => {
           //Push message key into myMessages for fan-out
-          this.message.myMessage = true
           this.afdata.object(`profile/${this.message.uid}/myMessages/${this.currentFID}/${item.key}/`).set("1")
-          this.message.myMessage = false
           this.afdata.object(`profile/${this.currentFID}/myMessages/${this.message.uid}/${item.key}/`).set("1")          
         });
     })

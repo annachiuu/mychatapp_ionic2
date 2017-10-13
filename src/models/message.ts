@@ -3,5 +3,5 @@ export class Message {
   fid: string;
   time: Date;
   text: string;
-  myMessage: boolean;
+  owner: string;
 }

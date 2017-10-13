@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Chat Messenger</ion-title>
+    <ion-title>Chat Messenger {{(currentFriend | async)?.firstName }}</ion-title>
   </ion-navbar>
 
 </ion-header>

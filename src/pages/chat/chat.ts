@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Message } from '../../models/message';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
+import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
+import { Profiles } from '../../models/profiles';
 
 /**
  * Generated class for the ChatPage page.
@@ -22,10 +23,10 @@ import { Observable } from 'rxjs/Observable';
 export class ChatPage {
 
   message = {} as Message;
-  messageListRef$: FirebaseListObservable<Message[]>;
-  recievedListRef$: FirebaseListObservable<Message[]>;
-  messageList: Observable<any>
-
+  messageList: Observable<any>;
+  
+  currentFriend: FirebaseObjectObservable<Profiles>;
+  
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
 
@@ -38,11 +39,9 @@ export class ChatPage {
           }
         });
       */
-
-
-        //NEW METHOD
-        // let uid = this.afauth.auth.currentUser.uid
-        let uid = "1j528dolDdbFqPPhFU10FZ2ISc52"
+       
+        //Retrieve messages through .map (fan-out)
+        let uid = this.afauth.auth.currentUser.uid
         this.messageList = this.afdata.list(`profile/${uid}/myMessages`)
         .map((messages) => {
           return messages.map(message => {
@@ -57,6 +56,14 @@ export class ChatPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatPage');
+    let friend = this.navParams.get('friend')
+
+    this.afdata.object(`profile/${friend.$key}`).subscribe(data => {
+      console.log(data)
+    })
+
+    this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
+
   }
 
   send() {

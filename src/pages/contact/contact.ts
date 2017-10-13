@@ -5,6 +5,7 @@ import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable }
 import { AngularFireAuth } from 'angularfire2/auth';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
+import { ChatPage } from '../chat/chat';
 
 
 @Component({
@@ -90,6 +91,11 @@ addToFriendList(key: string) {
   this.afdata.object(`profile/${uid}/myFriends/${key}`).set(1)
 }
 
+friendSelected(friend: Profiles) {
+    this.navCtrl.push(ChatPage, {
+      friend: friend
+    });
+}
 
 
 }

@@ -13,15 +13,16 @@
     <ion-fab top right edge>
         <button ion-fab color="light" (click)="showPrompt()"><ion-icon name="add"></ion-icon></button>
       </ion-fab>
+  
+  <ion-list inset>
+      <button ion-item *ngFor="let friend of userFriends | async" (click)="friendSelected(friend)">
+          <ion-avatar item-start>
+              <img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/6/005/07c/31e/153cdd3.jpg">
+            </ion-avatar>
+        <h2>{{ (friend.data | async)?.firstName + " " + (friend.data | async)?.lastName }}</h2>
+        <p>{{(friend.data | async)?.username}}</p>
+      </button> 
+  </ion-list>
 
-  <ion-list>
-    <ion-list-header>You have {{(userFriends| async)?.length}} contacts</ion-list-header>
-    <ion-item *ngFor="let friend of userFriends | async">
-        <ion-avatar item-start>
-            <img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/6/005/07c/31e/153cdd3.jpg">
-          </ion-avatar>
-      <h2>{{ (friend.data | async)?.firstName + " " + (friend.data | async)?.lastName }}</h2>
-      <p>{{(friend.data | async)?.username}}</p>
-   </ion-item>
-  </ion-list> 
+
 </ion-content>

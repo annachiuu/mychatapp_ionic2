@@ -20,8 +20,8 @@ import 'rxjs/add/operator/filter';
 export class ChatPage {
 
   message = {} as Message;
-  messageListRef$: FirebaseListObservable<message[]>;
-  recievedListRef$: FirebaseListObservable<message[]>;
+  messageListRef$: FirebaseListObservable<Message[]>;
+  recievedListRef$: FirebaseListObservable<Message[]>;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
@@ -44,7 +44,6 @@ export class ChatPage {
     //add to messages branch in fb
     this.message.uid = this.afauth.auth.currentUser.uid
     this.message.fid = "SSyLZi4CHxbVNIeNHwrJEbCSPIH3" //change it later
-    this.message.time = Date()
 
     this.afauth.authState.take(1).subscribe(auth => {
         this.afdata.list(`messages`).push(this.message)

@@ -11,4 +11,9 @@ export class ContactPage {
 
   }
 
+
+  addNewFriend() {
+    console.log('Add new friend pressed')
+  }
+
 }

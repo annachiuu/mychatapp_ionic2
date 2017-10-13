@@ -24,7 +24,7 @@ export class HomePage {
       if (data && data.uid && data.email){
       this.toast.create({
         message: 'Welcome to MyChatApp ' + data.uid,
-        duration: 2000
+        duration: 200 //Change to 2000 later
       }).present()
 
     this.profileData = this.afdata.object(`profile/${data.uid}`)

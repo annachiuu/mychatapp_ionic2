@@ -21,6 +21,8 @@ export class ChatPage {
   currentFriend: FirebaseObjectObservable<Profiles>;
   currentFID: string;
 
+  friendMessageList: Observable<any>;
+
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
 
@@ -37,6 +39,19 @@ export class ChatPage {
     })
   }
 
+  retrieveFriendMessages() {
+    let uid = this.afauth.auth.currentUser.uid
+    this.friendMessageList = this.afdata.list(`profile/${this.currentFID}/myMessages/${uid}`)
+    .map((messages) => {
+      return messages.map(message => {
+        message.data = this.afdata.object(`messages/${message.$key}`)
+          return message
+       })
+    })
+
+    console.log(this.friendMessageList)
+  }
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatPage');
@@ -46,7 +61,8 @@ export class ChatPage {
     this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
 
     this.retrieveUserMessages()
-    
+    this.retrieveFriendMessages()
+  
   }
 
   send() {

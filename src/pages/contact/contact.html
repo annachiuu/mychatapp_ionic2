@@ -15,9 +15,13 @@
       </ion-fab>
 
   <ion-list>
-    <ion-list-header>You have 2 contacts</ion-list-header>
+    <ion-list-header>You have {{(userFriends| async)?.length}} contacts</ion-list-header>
     <ion-item *ngFor="let friend of userFriends | async">
-      <h2>{{ (friend.data | async)?.firstName }}</h2>
+        <ion-avatar item-start>
+            <img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/6/005/07c/31e/153cdd3.jpg">
+          </ion-avatar>
+      <h2>{{ (friend.data | async)?.firstName + " " + (friend.data | async)?.lastName }}</h2>
+      <p>{{(friend.data | async)?.username}}</p>
    </ion-item>
   </ion-list> 
 </ion-content>

@@ -2,5 +2,7 @@
   "name": "mychatapp",
   "app_id": "36c2cc30",
   "type": "ionic-angular",
-  "integrations": {}
+  "integrations": {
+    "cordova": {}
+  }
 }

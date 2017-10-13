@@ -78,4 +78,14 @@ export class ChatPage {
 
   }
 
+  recordStart() {
+    console.log('Record start')
+  }
+
+  recordEnd() {
+    console.log('Record end')
+  }
+
+
+
 }

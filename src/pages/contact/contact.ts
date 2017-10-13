@@ -3,6 +3,8 @@ import { NavController,AlertController } from 'ionic-angular';
 import { Profiles } from '../../models/profiles';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
 import { AngularFireAuth } from 'angularfire2/auth';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 
 @Component({
@@ -11,26 +13,46 @@ import { AngularFireAuth } from 'angularfire2/auth';
 })
 export class ContactPage {
 
-  friendsListRef$: FirebaseListObservable<string[]>;
-  
+  friendsListRef$: FirebaseListObservable<Profiles[]>;
+  friendsArr = [];
+  friends: FirebaseObjectObservable<Profiles[]>;
+  userFriends: Observable<any>;
   
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public alertCtrl: AlertController,
     public navCtrl: NavController) {
 
-      //Retrieve list of friend's UID from firebase
-      let uid = this.afauth.auth.currentUser.uid
-      this.afdata.list(`profile/${uid}/myFriends/`).subscribe(data => {
-        console.log(data, 'run till here')
-        data.forEach( friend => {
-          console.log(friend.$key)
-          //Use each UID to display profile
-        })
+      // //Retrieve list of friend's UID from firebase
+      // let uid = this.afauth.auth.currentUser.uid
+      // this.afdata.list(`profile/${uid}/myFriends/`).subscribe(data => {
+      //   console.log(data, 'run till here')
+      //   data.forEach( friend => {
+      //     console.log(friend.$key)
+      //     //Use each UID to display profile
+      //     this.addProfile(friend.$key)
+      //   })
 
+      // })
+
+      
+      let uid = this.afauth.auth.currentUser.uid      
+      this.userFriends = this.afdata.list(`profile/${uid}/myFriends`)
+      .map((friends) => {
+        return friends.map(friend => {
+          friend.data = this.afdata.object(`profile/${friend.$key}`)
+          return friend
+        })
       })
 
+
   }
-  
+  addProfile(uid: string) {
+    let profile = this.afdata.object(`profile/${uid}`)
+    this.friendsArr.push(profile)
+    console.log(profile)
+  } 
+
+
   showPrompt() {
     let prompt = this.alertCtrl.create({
       title: 'Add Friend',

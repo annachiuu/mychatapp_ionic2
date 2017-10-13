@@ -16,8 +16,8 @@
 
   <ion-list>
     <ion-list-header>You have 2 contacts</ion-list-header>
-    <!-- <ion-item *ngFor="let friend of friendsListRef$ | async">
-      <h2>{{friend}}</h2> -->
-    <!-- </ion-item> -->
+    <ion-item *ngFor="let friend of userFriends | async">
+      <h2>{{ (friend.data | async)?.firstName }}</h2>
+   </ion-item>
   </ion-list> 
 </ion-content>

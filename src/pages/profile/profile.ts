@@ -22,7 +22,7 @@ export class ProfilePage {
     console.log('ionViewDidLoad ProfilePage');
   }
 
-  saveProfile(profile: profile) {
+  saveProfile(profile: Profiles) {
     //capture the auth state
     this.afauth.authState.take(1).subscribe(auth => {
       this.afdata.object("profile/" + auth.uid ).set(this.profile)

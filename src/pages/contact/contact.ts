@@ -42,7 +42,7 @@ export class ContactPage {
   }
 
   addNewFriend() {
-    
+    this.showPrompt()
   }
 
 }

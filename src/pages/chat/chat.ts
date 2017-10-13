@@ -3,17 +3,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Message } from '../../models/message';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
-import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Profiles } from '../../models/profiles';
 
-/**
- * Generated class for the ChatPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -21,7 +14,7 @@ import { Profiles } from '../../models/profiles';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
-
+  
   message = {} as Message;
   messageList: Observable<any>;
   
@@ -30,26 +23,30 @@ export class ChatPage {
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
-       
-        //Retrieve messages through .map (fan-out)
-        let uid = this.afauth.auth.currentUser.uid
-        this.messageList = this.afdata.list(`profile/${uid}/myMessages`)
-        .map((messages) => {
-          return messages.map(message => {
-            message.data = this.afdata.object(`messages/${message.$key}`)
-            return message
-          })
-        })
 
   }
+  
+  retrieveUserMessages() {
+    let uid = this.afauth.auth.currentUser.uid
+    this.messageList = this.afdata.list(`profile/${uid}/myMessages/${this.currentFID}`)
+    .map((messages) => {
+      return messages.map(message => {
+        message.data = this.afdata.object(`messages/${message.$key}`)
+          return message
+       })
+    })
+  }
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatPage');
     let friend = this.navParams.get('friend')
 
-    this.currentFID = friend.$key;
+    this.currentFID = friend.$key;    
     this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
 
+    this.retrieveUserMessages()
+    
   }
 
   send() {
@@ -62,7 +59,7 @@ export class ChatPage {
         this.afdata.list(`messages`).push(this.message)
         .then((item) => {
           //Push message key into myMessages for fan-out
-          this.afdata.object(`profile/${this.message.uid}/myMessages/${item.key}`).set("1")
+          this.afdata.object(`profile/${this.message.uid}/myMessages/${this.currentFID}/${item.key}/`).set("1")
         });
     })
   }

@@ -39,18 +39,18 @@ export class ChatPage {
     })
   }
 
-  retrieveFriendMessages() {
-    let uid = this.afauth.auth.currentUser.uid
-    this.friendMessageList = this.afdata.list(`profile/${this.currentFID}/myMessages/${uid}`)
-    .map((messages) => {
-      return messages.map(message => {
-        message.data = this.afdata.object(`messages/${message.$key}`)
-          return message
-       })
-    })
+  // retrieveFriendMessages() {
+  //   let uid = this.afauth.auth.currentUser.uid
+  //   this.friendMessageList = this.afdata.list(`profile/${this.currentFID}/myMessages/${uid}`)
+  //   .map((messages) => {
+  //     return messages.map(message => {
+  //       message.data = this.afdata.object(`messages/${message.$key}`)
+  //         return message
+  //      })
+  //   })
 
-    console.log(this.friendMessageList)
-  }
+  //   console.log(this.friendMessageList)
+  // }
 
 
   ionViewDidLoad() {
@@ -61,7 +61,6 @@ export class ChatPage {
     this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
 
     this.retrieveUserMessages()
-    this.retrieveFriendMessages()
   
   }
 
@@ -70,12 +69,15 @@ export class ChatPage {
     //add to messages branch in fb
     this.message.uid = this.afauth.auth.currentUser.uid
     this.message.fid = this.currentFID //change it later
-
+    this.message.time = new Date()
     this.afauth.authState.take(1).subscribe(auth => {
         this.afdata.list(`messages`).push(this.message)
         .then((item) => {
           //Push message key into myMessages for fan-out
+          this.message.myMessage = true
           this.afdata.object(`profile/${this.message.uid}/myMessages/${this.currentFID}/${item.key}/`).set("1")
+          this.message.myMessage = false
+          this.afdata.object(`profile/${this.currentFID}/myMessages/${this.message.uid}/${item.key}/`).set("1")          
         });
     })
   }

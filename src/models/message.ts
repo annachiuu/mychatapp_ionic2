@@ -1,6 +1,7 @@
 export class Message {
   uid: string;
   fid: string;
-  time: Date = new Date();
+  time: Date;
   text: string;
+  myMessage: boolean;
 }

@@ -29,16 +29,6 @@ export class ChatPage {
   
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public navCtrl: NavController, public navParams: NavParams) {
-
-      /*
-      //OLD METHOD
-        this.messageListRef$ = this.afdata.list(`messages`, {
-          query: {
-            orderByChild: 'uid',
-            equalTo: this.afauth.auth.currentUser.uid
-          }
-        });
-      */
        
         //Retrieve messages through .map (fan-out)
         let uid = this.afauth.auth.currentUser.uid
@@ -49,8 +39,6 @@ export class ChatPage {
             return message
           })
         })
-
-
 
   }
 

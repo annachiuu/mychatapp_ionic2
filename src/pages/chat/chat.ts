@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, NavParams, Platform } from 'ionic-angular';
 import { Message } from '../../models/message';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
@@ -15,6 +15,11 @@ import { Media, MediaObject } from '@ionic-native/media';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
+  private _audioFile: MediaObject;
+  private _platform: Platform;
+  private _pathFile: string;
+  private _nameFile: string;
+
   
   message = {} as Message;
   messageList: Observable<any>;
@@ -26,7 +31,7 @@ export class ChatPage {
   currentUserName: string;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
-    private media: Media,
+    private media: Media,public platform: Platform, public alertCtrl: AlertController,
     public navCtrl: NavController, public navParams: NavParams,) {
 
   }
@@ -80,10 +85,56 @@ export class ChatPage {
 
   }
 
-  public recordStart() {
-    console.log('Record start')
+
+  public startRecording(): void {
+    try {
+    this._pathFile = this.getPathFileRecordAudio();
+    this._audioFile = this.media.create(this._pathFile);
+    this._audioFile.startRecord()
+    } catch (e) {
+      this.showAlert('Could not start recording')      
+    }
   }
 
+  public  stopRecording() {
+    try {
+      this._audioFile.stopRecord()
+      } catch (e) {
+      this.showAlert('Could not stop recording')              
+      }
+  }
+
+  public startPlayback() {
+    try {
+      this._audioFile = this.media.create(this._pathFile)
+      this._audioFile.play()
+    } catch (e) {
+      this.showAlert('Could not start play')
+    }
+  }
+
+  public stopPlayback() {
+    try {
+      this._audioFile.stop()
+    } catch (e) {
+      this.showAlert('Could not stop')
+    }
+  }
+
+  private getPathFileRecordAudio(): string {
+    let path: string = (this._platform.is('ios') ? '../Library/NoCloud/': '../Documents/');
+    return path + this._nameFile + '-' + '.wav';
+  }
+
+  //Alert Controller method
+  showAlert(message) {
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 
 
 

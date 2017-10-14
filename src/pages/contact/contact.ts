@@ -71,7 +71,7 @@ export class ContactPage {
   }
 
 saveNewFriend(user: string) {
-  console.log(`about to save username: ${user} as new friend`)
+  console.log(`Trying to add ${user} as new friend`)
   //Reference username to find UID of friend
   this.afdata.list(`profile`,{
     query: {
@@ -79,11 +79,15 @@ saveNewFriend(user: string) {
       equalTo: user
     }
   }).subscribe(data => {
+    try {
     console.log(data[0].$key)
     //Add UID into friendList under profile
     let userkey = data[0].$key
     this.addToFriendList(userkey)
-
+    console.log(`Added ${user} as new friend`)
+    } catch(e) {
+      this.showAlert('Invalid Username')
+    }
   })
 }
 addToFriendList(key: string) {
@@ -97,5 +101,14 @@ friendSelected(friend: Profiles) {
     });
 }
 
+  //Alert Controller method
+showAlert(message) {
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 
 }

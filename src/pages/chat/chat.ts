@@ -6,6 +6,7 @@ import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable }
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Profiles } from '../../models/profiles';
+import { Media, MediaObject } from '@ionic-native/media';
 
 
 @IonicPage()
@@ -25,7 +26,8 @@ export class ChatPage {
   currentUserName: string;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
-    public navCtrl: NavController, public navParams: NavParams) {
+    private media: Media,
+    public navCtrl: NavController, public navParams: NavParams,) {
 
   }
   
@@ -78,13 +80,10 @@ export class ChatPage {
 
   }
 
-  recordStart() {
+  public recordStart() {
     console.log('Record start')
   }
 
-  recordEnd() {
-    console.log('Record end')
-  }
 
 
 

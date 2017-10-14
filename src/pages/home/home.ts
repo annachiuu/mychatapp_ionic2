@@ -23,7 +23,9 @@ export class HomePage {
     public navCtrl: NavController) {
   }
 
-  ionViewDidLoad() {
+  
+
+  ionViewDidEnter() {
 
   firebase.auth().onAuthStateChanged(data => {
     if (data) {

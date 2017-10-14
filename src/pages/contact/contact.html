@@ -17,7 +17,7 @@
   <ion-list inset>
       <button ion-item *ngFor="let friend of userFriends | async" (click)="friendSelected(friend)">
           <ion-avatar item-start>
-              <img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/6/005/07c/31e/153cdd3.jpg">
+              <img src="https://i.pinimg.com/originals/51/83/ef/5183ef65b82a66cf573f324e59cf028b.jpg">
             </ion-avatar>
         <h2>{{ (friend.data | async)?.firstName + " " + (friend.data | async)?.lastName }}</h2>
         <p>{{(friend.data | async)?.username}}</p>

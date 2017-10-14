@@ -23,7 +23,7 @@ export class ChatPage {
   recording: boolean = false;
   message = {} as Message;
   messageList: Observable<any>;
-  
+
   currentFriend: FirebaseObjectObservable<Profiles>;
   currentFID: string;
 
@@ -31,20 +31,20 @@ export class ChatPage {
   currentUserName: string;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
-    private media: Media,public platform: Platform, public alertCtrl: AlertController,
-    public navCtrl: NavController, public navParams: NavParams,) {
+    private media: Media, public platform: Platform, public alertCtrl: AlertController,
+    public navCtrl: NavController, public navParams: NavParams, ) {
 
   }
-  
+
   retrieveUserMessages() {
     let uid = this.afauth.auth.currentUser.uid
     this.messageList = this.afdata.list(`profile/${uid}/myMessages/${this.currentFID}`)
-    .map((messages) => {
-      return messages.map(message => {
-        message.data = this.afdata.object(`messages/${message.$key}`)
+      .map((messages) => {
+        return messages.map(message => {
+          message.data = this.afdata.object(`messages/${message.$key}`)
           return message
-       })
-    })
+        })
+      })
   }
 
   ionViewDidLoad() {
@@ -55,7 +55,7 @@ export class ChatPage {
     this.afdata.object(`profile/${uid}`).subscribe(data => {
       this.currentUserName = data.firstName + " " + data.lastName;
     })
-    this.currentFID = friend.$key;    
+    this.currentFID = friend.$key;
     this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
 
     this.retrieveUserMessages()
@@ -63,46 +63,53 @@ export class ChatPage {
 
   }
 
-  send() {
+  async send() {
     if (this.message.text) {
 
-    //fill in message details
-    this.message.uid = this.afauth.auth.currentUser.uid
-    this.message.fid = this.currentFID //change it later
-    this.message.time = new Date()
-    this.message.owner = this.currentUserName
+      //fill in message details
+      this.message.uid = this.afauth.auth.currentUser.uid
+      this.message.fid = this.currentFID //change it later
+      this.message.time = new Date()
+      this.message.owner = this.currentUserName
 
-  //add to messages branch in fb
-    this.afauth.authState.take(1).subscribe(auth => {
+      //add to messages branch in fb
+      this.afauth.authState.take(1).subscribe(auth => {
         this.afdata.list(`messages`).push(this.message)
-        .then((item) => {
-          //Push message key into myMessages for fan-out
-          this.afdata.object(`profile/${this.message.uid}/myMessages/${this.currentFID}/${item.key}/`).set("1")
-          this.afdata.object(`profile/${this.currentFID}/myMessages/${this.message.uid}/${item.key}/`).set("1")          
-        });
-    })
+          .then((item) => {
+            //Push message key into myMessages for fan-out
+            this.afdata.object(`profile/${this.message.uid}/myMessages/${this.currentFID}/${item.key}/`).set("1")
+            this.afdata.object(`profile/${this.currentFID}/myMessages/${this.message.uid}/${item.key}/`).set("1")
+          });
+          //Reset message after block above is finished
+          this.message.text = null
+      })
+    }
+
   }
 
-
-
+  sendVoiceMessage() {
+    this.startRecording()
+    this.message.text = '---- Voice Message -----'
+    console.log(this.message.text, 'message text currently')
+    this.send()
   }
-  
-  public startRecording(){
+
+  public startRecording() {
     try {
-    this._pathFile = this.getPathFileRecordAudio();
-    this._audioFile = this.media.create(this._pathFile);
-    this._audioFile.startRecord()
+      this._pathFile = this.getPathFileRecordAudio();
+      this._audioFile = this.media.create(this._pathFile);
+      this._audioFile.startRecord()
     } catch (e) {
-      this.showAlert('Could not start recording')      
+      this.showAlert('Could not start recording')
     }
   }
 
-  public  stopRecording() {
+  public stopRecording() {
     try {
       this._audioFile.stopRecord()
-      } catch (e) {
-      this.showAlert('Could not stop recording')              
-      }
+    } catch (e) {
+      this.showAlert('Could not stop recording')
+    }
   }
 
   public startPlayback() {
@@ -123,7 +130,7 @@ export class ChatPage {
   }
 
   private getPathFileRecordAudio(): string {
-    let path: string = (this._platform.is('ios') ? '../Library/NoCloud/': '../Documents/');
+    let path: string = (this._platform.is('ios') ? '../Library/NoCloud/' : '../Documents/');
     return path + this._nameFile + '-' + '.wav';
   }
 
@@ -138,10 +145,10 @@ export class ChatPage {
   }
 
   playOrStop() {
-    if (this.recording){
+    if (this.recording) {
       this.stopRecording();
       this.recording = !this.recording;
-    } else { 
+    } else {
       this.startRecording();
       this.recording = !this.recording;
     }

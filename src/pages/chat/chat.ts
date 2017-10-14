@@ -20,7 +20,7 @@ export class ChatPage {
   private _pathFile: string;
   private _nameFile: string;
 
-  
+  recording: boolean = false;
   message = {} as Message;
   messageList: Observable<any>;
   
@@ -59,7 +59,7 @@ export class ChatPage {
     this.currentFriend = this.afdata.object(`profile/${friend.$key}`)
 
     this.retrieveUserMessages()
-  
+
 
   }
 
@@ -83,10 +83,11 @@ export class ChatPage {
     })
   }
 
+
+
   }
-
-
-  public startRecording(): void {
+  
+  public startRecording(){
     try {
     this._pathFile = this.getPathFileRecordAudio();
     this._audioFile = this.media.create(this._pathFile);
@@ -136,6 +137,14 @@ export class ChatPage {
     alert.present();
   }
 
+  playOrStop() {
+    if (this.recording){
+      this.stopRecording();
+      this.recording = !this.recording;
+    } else { 
+      this.startRecording();
+      this.recording = !this.recording;
+    }
 
-
+  }
 }

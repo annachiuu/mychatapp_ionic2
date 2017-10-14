@@ -5,6 +5,7 @@ import { MyApp } from './app.component';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule} from 'angularfire2/database-deprecated';
+import { Media, MediaObject} from "@ionic-native/media";
 
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
@@ -64,6 +65,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   providers: [
     StatusBar,
     SplashScreen,
+    Media,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

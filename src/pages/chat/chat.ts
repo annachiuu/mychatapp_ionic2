@@ -108,8 +108,6 @@ export class ChatPage {
   uploadToFirebase() {
     console.log('Uploading to firebase...');
     let path = this.getPathRecordAudio();
-    // let fileName = 'temp.wav'
-    // this.file.createFile(path, 'test.wav', true).then(data => {
       try {
         this.file.readAsDataURL(path, 'temp.wav').then(dataURL => {
           console.log(dataURL, 'read as data URL')
@@ -132,28 +130,43 @@ export class ChatPage {
 
   }
 
-  public startRecording(): void {
+  // public startRecording(): void {
+  //   try {
+  //   let path = this.getPathRecordAudio();
+  //   console.log('attempt to record into' + path)
+  //   let fileName = 'temp.wav'
+  //   this._pathFile = path + fileName;
+  //   this.file.createFile(path, fileName, true).then(fileEntry => {
+  //     console.log(fileEntry.name, 'Created fileEntry here')
+  //     this._audioFile = this.media.create(fileEntry.name)
+  //     this._audioFile.startRecord()
+  //     setTimeout(() => {
+  //       this.stopRecording()
+  //     }, 3500)
+  //     setTimeout(() => {
+  //       this.uploadToFirebase()
+  //     }, 5000)
+  //   })
+
+  //   } catch (e) {
+  //     this.showAlert('Could not start recording')      
+  //   }
+  // } 
+
+  public startRecording() {
     try {
     let path = this.getPathRecordAudio();
-    console.log('attempt to record into' + path)
     let fileName = 'temp.wav'
-    this._pathFile = path + fileName;
-    this.file.createFile(path, fileName, true).then(fileEntry => {
-      console.log(fileEntry.name, 'Created fileEntry here')
-      this._audioFile = this.media.create(fileEntry.name)
-      this._audioFile.startRecord()
-      setTimeout(() => {
-        this.stopRecording()
-      }, 3500)
-      setTimeout(() => {
-        this.uploadToFirebase()
-      }, 5000)
-    })
-
+    this._audioFile = this.media.create(path + fileName);
+    this._audioFile.startRecord()
+    setTimeout(() => {
+            this.stopRecording()
+          }, 5000)
     } catch (e) {
       this.showAlert('Could not start recording')      
     }
   }
+
 
   public stopRecording() {
     try {
@@ -166,7 +179,6 @@ export class ChatPage {
 
   public startPlayback() {
     try {
-      this._audioFile = this.media.create(this._pathFile)
       this._audioFile.play()
     } catch (e) {
       this.showAlert('Could not start play')
@@ -183,7 +195,7 @@ export class ChatPage {
 
   private getPathRecordAudio(): string {
     if (this._platform.is('ios')) {
-      return this.file.tempDirectory;  
+      return "../Library/NoCloud/" 
     }  else if (this.platform.is('android')) {
       return this.file.externalRootDirectory;
     }

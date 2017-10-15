@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, AlertController, NavParams, Platform } from 'ionic-angular';
 import { Message } from '../../models/message';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Profiles } from '../../models/profiles';
 import { Media, MediaObject } from '@ionic-native/media';
-
+import { File } from '@ionic-native/file';
+import * as firebase from 'firebase';
 
 @IonicPage()
 @Component({
@@ -15,12 +16,12 @@ import { Media, MediaObject } from '@ionic-native/media';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
+  testDir: string;
+  downloadURL: string;
   private _audioFile: MediaObject;
   private _platform: Platform;
   private _pathFile: string;
-  private _nameFile: string;
 
-  recording: boolean = false;
   message = {} as Message;
   messageList: Observable<any>;
 
@@ -31,9 +32,10 @@ export class ChatPage {
   currentUserName: string;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
-    private media: Media, public platform: Platform, public alertCtrl: AlertController,
+    public media: Media, private file: File, public platform: Platform, public alertCtrl: AlertController,
     public navCtrl: NavController, public navParams: NavParams, ) {
-
+      this._platform = platform;
+      
   }
 
   retrieveUserMessages() {
@@ -87,26 +89,63 @@ export class ChatPage {
 
   }
 
-  sendVoiceMessage() {
-    this.startRecording()
-    this.message.text = '---- Voice Message -----'
-    console.log(this.message.text, 'message text currently')
-    this.send()
+  uploadToFirebase() {
+    console.log('Uploading to firebase...');
+    let path = this.getPathRecordAudio();
+    // let fileName = 'temp.wav'
+    // this.file.createFile(path, 'test.wav', true).then(data => {
+      try {
+        this.file.readAsDataURL(path, 'temp.wav').then(dataURL => {
+          console.log(dataURL, 'read as data URL')
+          let storageRef = firebase.storage().ref();
+          let newMessageKey = this.makeid() + '.wav';
+          storageRef.child(`messageUploads/${newMessageKey}`).putString(dataURL, 'data_url').then(snap => {
+            console.log(snap, 'Uploaded to firebase')
+            
+            //Get download URL and send to messages
+            this.downloadURL = snap.downloadURL
+            this.message.text = this.downloadURL
+            this.send()
+    
+          })
+        })
+      } catch (e) {
+        console.log(e)
+      }
+
   }
 
-  public startRecording() {
+  public startRecording(): void {
     try {
-      this._pathFile = this.getPathFileRecordAudio();
-      this._audioFile = this.media.create(this._pathFile);
+    let path = this.getPathRecordAudio();
+    console.log('attempt to record into' + path)
+    let fileName = 'temp.wav'
+    this.file.createFile(path, fileName, true).then(fileEntry => {
+      console.log(fileEntry.name, 'Created fileEntry here')
+      this._audioFile = this.media.create(fileEntry.name)
       this._audioFile.startRecord()
+      setTimeout(() => {
+        this.stopRecording()
+      }, 3500)
+      setTimeout(() => {
+        this.uploadToFirebase()
+      }, 5000)
+    })
+      // this._audioFile = this.media.create(path + fileName);
+      // this._audioFile.startRecord()
+      // setTimeout(() => {
+      //   this.stopRecording()
+      // }, 3000)
+
     } catch (e) {
-      this.showAlert('Could not start recording')
+      this.showAlert('Could not start recording')      
     }
   }
 
   public stopRecording() {
     try {
       this._audioFile.stopRecord()
+      console.log('stopped recording')
     } catch (e) {
       this.showAlert('Could not stop recording')
     }
@@ -129,10 +168,19 @@ export class ChatPage {
     }
   }
 
-  private getPathFileRecordAudio(): string {
-    let path: string = (this._platform.is('ios') ? '../Library/NoCloud/' : '../Documents/');
-    return path + this._nameFile + '-' + '.wav';
+  private getPathRecordAudio(): string {
+    if (this._platform.is('ios')) {
+      return this.file.tempDirectory;  
+    }  else if (this.platform.is('android')) {
+      return this.file.externalRootDirectory;
+    }
   }
+
+  // private getFileName(): string {
+  //   let fileType: string = (this._platform.is('ios') ? '.wav'  : '.3pg');
+  //   return 'temp' + fileType
+  // }
+
 
   //Alert Controller method
   showAlert(message) {
@@ -144,14 +192,14 @@ export class ChatPage {
     alert.present();
   }
 
-  playOrStop() {
-    if (this.recording) {
-      this.stopRecording();
-      this.recording = !this.recording;
-    } else {
-      this.startRecording();
-      this.recording = !this.recording;
-    }
-
+  makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+    for (var i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;
   }
+
 }

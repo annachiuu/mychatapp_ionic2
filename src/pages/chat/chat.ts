@@ -122,7 +122,7 @@ export class ChatPage {
     let fileName = 'temp.wav'
     this.file.createFile(path, fileName, true).then(fileEntry => {
       console.log(fileEntry.name, 'Created fileEntry here')
-      this._audioFile = this.media.create(fileEntry.name)
+      this._audioFile = this.media.create(path + fileName)
       this._audioFile.startRecord()
       setTimeout(() => {
         this.stopRecording()

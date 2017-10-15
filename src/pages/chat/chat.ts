@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Profiles } from '../../models/profiles';
 import { Media, MediaObject } from '@ionic-native/media';
-import { File } from '@ionic-native/file';
+// import { File } from '@ionic-native/file';
 import * as firebase from 'firebase';
 
 @IonicPage()
@@ -32,7 +32,7 @@ export class ChatPage {
   currentUserName: string;
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
-    public media: Media, private file: File, public platform: Platform, public alertCtrl: AlertController,
+    public media: Media, public platform: Platform, public alertCtrl: AlertController,
     public navCtrl: NavController, public navParams: NavParams, ) {
       this._platform = platform;
       

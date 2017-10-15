@@ -69,15 +69,16 @@ export class ChatPage {
   retrieveVoiceMessage(message: Message) {
     console.log('Attempt retrieve voice message')
 
-   if (message.voiceMessage) {
-    let storageRef = firebase.storage().refFromURL(message.text)
-  storageRef.getDownloadURL().then(url => {
-    let messageLength = this.media.create(url).getDuration()
-    this.showAlert(`Message duration: ${messageLength}`)
-  }).catch(e => {
-    console.log(e)
-  })
-   }
+    //only retrieve those that are voice messages
+    if (message.voiceMessage) {
+      let storageRef = firebase.storage().refFromURL(message.text)
+      storageRef.getDownloadURL().then(url => {
+        let messageLength = this.media.create(url).getDuration()
+        this.showAlert(`Message duration: ${messageLength}`)
+      }).catch(e => {
+        console.log(e)
+      })
+    }
   }
 
   async send() {

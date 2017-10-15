@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Profiles } from '../../models/profiles';
 import { Media, MediaObject } from '@ionic-native/media';
-// import { File } from '@ionic-native/file';
+import { File } from '@ionic-native/file';
 import * as firebase from 'firebase';
 
 @IonicPage()
@@ -33,6 +33,7 @@ export class ChatPage {
 
   constructor(private afauth: AngularFireAuth, private afdata: AngularFireDatabase,
     public media: Media, public platform: Platform, public alertCtrl: AlertController,
+    private file: File,
     public navCtrl: NavController, public navParams: NavParams, ) {
       this._platform = platform;
       
@@ -147,6 +148,7 @@ export class ChatPage {
       this.showAlert('Could not start recording')      
     }
   }
+  
 
 
   public stopRecording() {

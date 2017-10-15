@@ -20,7 +20,6 @@
         </ion-fab-list>
       </ion-fab>
 
-
 <!-- User chat box -->
   <ion-card color="light" align="left" *ngFor="let message of messageList | async" >
     <ion-card-header class='name'>{{(message.data | async)?.owner}}</ion-card-header>

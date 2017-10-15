@@ -73,7 +73,7 @@ export class ChatPage {
     if (message.voiceMessage) {
       let storageRef = firebase.storage().refFromURL(message.text)
       storageRef.getDownloadURL().then(url => {
-        let messageLength = this.media.create(url).getDuration()
+        let messageLength = this.media.create(url)
         this.showAlert(`Message duration: ${messageLength}`)
       }).catch(e => {
         console.log(e)
@@ -137,6 +137,7 @@ export class ChatPage {
     let path = this.getPathRecordAudio();
     console.log('attempt to record into' + path)
     let fileName = 'temp.wav'
+    this._pathFile = path + fileName;
     this.file.createFile(path, fileName, true).then(fileEntry => {
       console.log(fileEntry.name, 'Created fileEntry here')
       this._audioFile = this.media.create(fileEntry.name)

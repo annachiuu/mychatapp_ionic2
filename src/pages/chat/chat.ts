@@ -159,9 +159,6 @@ export class ChatPage {
     let fileName = 'temp.wav'
     this._audioFile = this.media.create(path + fileName);
     this._audioFile.startRecord()
-    setTimeout(() => {
-            this.stopRecording()
-          }, 5000)
     } catch (e) {
       this.showAlert('Could not start recording')      
     }

@@ -4,4 +4,5 @@ export class Message {
   time: Date;
   text: string;
   owner: string;
+  voiceMessage: boolean;
 }

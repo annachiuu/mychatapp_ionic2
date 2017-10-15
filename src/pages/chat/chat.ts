@@ -36,6 +36,7 @@ export class ChatPage {
     public navCtrl: NavController, public navParams: NavParams, ) {
       this._platform = platform;
       
+      
   }
 
   retrieveUserMessages() {
@@ -63,6 +64,20 @@ export class ChatPage {
     this.retrieveUserMessages()
 
 
+  }
+
+  retrieveVoiceMessage(message: Message) {
+    console.log('Attempt retrieve voice message')
+
+   if (message.voiceMessage) {
+    let storageRef = firebase.storage().refFromURL(message.text)
+  storageRef.getDownloadURL().then(url => {
+    let messageLength = this.media.create(url).getDuration()
+    this.showAlert(`Message duration: ${messageLength}`)
+  }).catch(e => {
+    console.log(e)
+  })
+   }
   }
 
   async send() {
@@ -105,6 +120,7 @@ export class ChatPage {
             //Get download URL and send to messages
             this.downloadURL = snap.downloadURL
             this.message.text = this.downloadURL
+            this.message.voiceMessage = true;
             this.send()
     
           })
@@ -122,7 +138,7 @@ export class ChatPage {
     let fileName = 'temp.wav'
     this.file.createFile(path, fileName, true).then(fileEntry => {
       console.log(fileEntry.name, 'Created fileEntry here')
-      this._audioFile = this.media.create(path + fileName)
+      this._audioFile = this.media.create(fileEntry.name)
       this._audioFile.startRecord()
       setTimeout(() => {
         this.stopRecording()
@@ -131,11 +147,6 @@ export class ChatPage {
         this.uploadToFirebase()
       }, 5000)
     })
-      // this._audioFile = this.media.create(path + fileName);
-      // this._audioFile.startRecord()
-      // setTimeout(() => {
-      //   this.stopRecording()
-      // }, 3000)
 
     } catch (e) {
       this.showAlert('Could not start recording')      
